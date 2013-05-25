@@ -70,13 +70,13 @@ casper.thenOpen(url+'active', function() {
     this.capture('todo3.png');
     casper.back();
 
-    this.echo(this.getCurrentUrl());
+    
 });
 
 
 // Testing compleled when have 1 active todo
 casper.thenOpen(url+'compleled', function() {
- this.echo(this.getCurrentUrl());
+
     this.test.assertDoesntExist("ul#todo-list li", 'Todo compleled tested'); 
     casper.back();
 });
