@@ -50,12 +50,10 @@ casper.then(function () {
         this.sendKeys("input#new-todo", "Testing");
 
         this.capture('todo3.png');
+		
         // Add a new todo
         this.page.sendEvent( 'keypress',this.page.event.key.Enter );
         this.capture('todo4.png');
-    },
-    function fail() {
-        this.test.assertExists("input#new-todo");
 });
 
 
@@ -70,25 +68,21 @@ casper.then(function() {
     this.test.assertEquals(this.getElementInfo(settings.todo_input).text,'Testing', 'Todo added to the todo list');
 });
 
-
 // Check todo count div exsits
 casper.then(function() {
     this.test.assertExists("#todo-count", 'Todo count exsits');
 });
-
 
 // Testing todo count when only 1 todo
 casper.then(function() {
     this.test.assertEquals(this.getElementInfo('#todo-count').text,'1 item left', 'Todo count correct');
 });
 
-
 // Testing active when have 1 active todo
 casper.thenOpen(url+'active', function() {
     this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,true, '1 todo when 1 active todo in active tab');
     casper.back();
 });
-
 
 // Testing compleled when have 1 active todo
 casper.thenOpen(url+'compleled', function() {
@@ -98,14 +92,11 @@ casper.thenOpen(url+'compleled', function() {
 	casper.back();
 });
 
-
-
 // Completes a todo
 casper.then(function() {
     this.click('ul#todo-list li .view input');
     this.capture('todo26.png');
 });
-
 
 // Testing compleled when have 1 completed todo
 casper.thenOpen(url+'compleled', function() {
@@ -114,11 +105,9 @@ casper.thenOpen(url+'compleled', function() {
     casper.back();
 });
 
-
 // Testing compleled when have 1 completed todo
 casper.thenOpen(url+'active', function() {
 	this.capture('todo8.png');
-	//utils.dump(this.getCurrentUrl());
     this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 completed todo in the active tab');
     casper.back();
 });
@@ -138,7 +127,6 @@ casper.then(function() {
 
 
 
-casper.run(function() {this.test.renderResults(true);});
 
 casper.clickWhileSelector('.destroy').run();
 //casper.run(function() {this.test.renderResults(true);});
