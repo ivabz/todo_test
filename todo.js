@@ -2,20 +2,16 @@
 // Todo MVC Testing
 // ==========================================
 // Author : Pasindu De Silva
-// Licensed under The MIT License
 // ==========================================
 
 var casper = require('casper').create();
-var url='http://todomvc.com/architecture-examples/backbone/#/';
-//var url='http://todomvc.com/architecture-examples/angularjs/#/';
+//var url='http://todomvc.com/architecture-examples/backbone/#/';
+var url='http://todomvc.com/architecture-examples/angularjs/#/';
 //var url='http://todomvc.com/architecture-examples/knockoutjs/#/';
+
 var utils = require('utils');
 
-
 casper.start(url);
-
-var x = require('casper').selectXPath;
-
 
 var settings={
 
@@ -42,6 +38,7 @@ casper.clickWhileSelector = function(selector) {
 casper.then(function () {
 		if (this.exists('.destroy')) 
 			this.click('.destroy');
+			
         this.capture('todo2.png');
         // Testing wheather new todo exsits
         this.test.assertExists("input#new-todo", 'New todo exsits');
@@ -88,19 +85,25 @@ casper.thenOpen(url+'active', function() {
 casper.thenOpen(url+'compleled', function() {
     // this.click('ul#filters li:nth-child(3)');
     this.capture('todo5.png');
-	this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 active todo in the completed tab');
+	
+	if (this.exists('ul#todo-list li')) 
+		this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 active todo in the completed tab');
+	else
+		this.test.assertDoesntExist('ul#todo-list li','0 todo when 1 active todo in the completed tab');  // This is for mvc that do not hide li
+		
 	casper.back();
 });
 
 // Completes a todo
 casper.then(function() {
     this.click('ul#todo-list li .view input');
-    this.capture('todo26.png');
+    this.capture('todo6.png');
 });
 
 // Testing compleled when have 1 completed todo
 casper.thenOpen(url+'compleled', function() {
 	this.capture('todo7.png');
+	
     this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,true, '1 todo when 1 completed todo in the completed tab');
     casper.back();
 });
@@ -108,7 +111,12 @@ casper.thenOpen(url+'compleled', function() {
 // Testing compleled when have 1 completed todo
 casper.thenOpen(url+'active', function() {
 	this.capture('todo8.png');
-    this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 completed todo in the active tab');
+	
+	if (this.exists('ul#todo-list li')) 
+		this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 completed todo in the active tab');
+	else
+		this.test.assertDoesntExist('ul#todo-list li','0 todo when 1 active todo in the completed tab');  // This is for mvc that do not hide li
+		
     casper.back();
 });
 
@@ -128,6 +136,6 @@ casper.then(function() {
 
 
 
-casper.clickWhileSelector('.destroy').run();
+casper.clickWhileSelector('.destroy').run(function() {this.test.renderResults(true);});
 //casper.run(function() {this.test.renderResults(true);});
 
