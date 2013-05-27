@@ -40,7 +40,7 @@ casper.clickWhileSelector = function(selector) {
 
 
 casper.then(function () {
-    	if (this.exists('.destroy')) 
+		if (this.exists('.destroy')) 
 			this.click('.destroy');
         this.capture('todo2.png');
         // Testing wheather new todo exsits
@@ -85,39 +85,23 @@ casper.then(function() {
 
 // Testing active when have 1 active todo
 casper.thenOpen(url+'active', function() {
-   // this.test.assertExists("ul#todo-list li", '1 todo when 1 active todo in active tab');
-	
     this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,true, '1 todo when 1 active todo in active tab');
     casper.back();
-<<<<<<< HEAD
-
-    
-=======
->>>>>>> update tests
 });
 
 
 // Testing compleled when have 1 active todo
 casper.thenOpen(url+'compleled', function() {
-<<<<<<< HEAD
-
-    this.test.assertDoesntExist("ul#todo-list li", 'Todo compleled tested'); 
-    casper.back();
-=======
     // this.click('ul#filters li:nth-child(3)');
     this.capture('todo5.png');
-	utils.dump(this.getCurrentUrl());
-	//utils.dump(this.getElementInfo('ul#todo-list'));
 	this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 active todo in the completed tab');
 	casper.back();
->>>>>>> update tests
 });
 
 
 
 // Completes a todo
 casper.then(function() {
-
     this.click('ul#todo-list li .view input');
     this.capture('todo26.png');
 });
@@ -134,6 +118,7 @@ casper.thenOpen(url+'compleled', function() {
 // Testing compleled when have 1 completed todo
 casper.thenOpen(url+'active', function() {
 	this.capture('todo8.png');
+	//utils.dump(this.getCurrentUrl());
     this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 completed todo in the active tab');
     casper.back();
 });
@@ -152,10 +137,9 @@ casper.then(function() {
 });
 
 
-<<<<<<< HEAD
 
 casper.run(function() {this.test.renderResults(true);});
-=======
+
 casper.clickWhileSelector('.destroy').run();
 //casper.run(function() {this.test.renderResults(true);});
->>>>>>> update tests
+
