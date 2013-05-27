@@ -5,52 +5,42 @@
 // ==========================================
 
 var casper = require('casper').create();
-//var url='http://todomvc.com/architecture-examples/backbone/#/';
-var url='http://todomvc.com/architecture-examples/angularjs/#/';
-//var url='http://todomvc.com/architecture-examples/knockoutjs/#/';
+//var url = 'http://todomvc.com/architecture-examples/backbone/#/';
+//var url = 'http://todomvc.com/architecture-examples/angularjs/#/';
+var url = 'http://todomvc.com/architecture-examples/knockoutjs/#/';
 
 var utils = require('utils');
 
 casper.start(url);
 
-var settings={
+var settings = {
 
-    todo_list_ul:"ul#todo-list",
-    todo_list_li:"ul#todo-list li",
-    todo_input :"ul#todo-list li .view label"
+    todo_list_ul : "ul#todo-list", // Selector for containing todos 
+    todo_list_li : "ul#todo-list li",
+    todo_input : "ul#todo-list li .view label"  // Selector for the added todos
 
-}
-
-
-casper.clickWhileSelector = function(selector) {
-    return this.then(function() {
-        if (this.exists(selector)) {
-            this.echo('found link: ' + this.getElementInfo(selector).tag);
-            this.click(selector);
-            
-      this.capture('todo1.png');
-            return this.clickWhileSelector(selector);
-        }
-  });
-}
+};
 
 
 casper.then(function () {
-		if (this.exists('.destroy')) 
-			this.click('.destroy');
-			
-        this.capture('todo2.png');
-        // Testing wheather new todo exsits
-        this.test.assertExists("input#new-todo", 'New todo exsits');
 
-        // Input a new todo
-        this.sendKeys("input#new-todo", "Testing");
+	while (this.exists('.destroy')) {	
+		this.click('.destroy');
+	}
 
-        this.capture('todo3.png');
-		
-        // Add a new todo
-        this.page.sendEvent( 'keypress',this.page.event.key.Enter );
-        this.capture('todo4.png');
+    this.capture('todo2.png');
+
+	// Testing wheather new todo exsits
+    this.test.assertExists("input#new-todo", 'New todo exsits');
+
+    // Input a new todo
+    this.sendKeys("input#new-todo", "Testing");
+
+    this.capture('todo3.png');
+
+    // Add a new todo
+    this.page.sendEvent('keypress', this.page.event.key.Enter);
+    this.capture('todo4.png');
 });
 
 
@@ -76,52 +66,54 @@ casper.then(function() {
 });
 
 // Testing active when have 1 active todo
-casper.thenOpen(url+'active', function() {
+casper.thenOpen(url + 'active', function() {
+
     this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,true, '1 todo when 1 active todo in active tab');
     casper.back();
 });
 
 // Testing compleled when have 1 active todo
-casper.thenOpen(url+'compleled', function() {
-    // this.click('ul#filters li:nth-child(3)');
+casper.then(function() {
+    this.click('ul#filters li:nth-child(3) a');
     this.capture('todo5.png');
-	
-	if (this.exists('ul#todo-list li')) 
-		this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 active todo in the completed tab');
-	else
-		this.test.assertDoesntExist('ul#todo-list li','0 todo when 1 active todo in the completed tab');  // This is for mvc that do not hide li
-		
-	casper.back();
 });
 
-// Completes a todo
+casper.then(function() {
+	if (this.exists('ul#todo-list li')) {
+		this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 active todo in the completed tab');
+	} else {
+		this.test.assertDoesntExist('ul#todo-list li','0 todo when 1 active todo in the completed tab');  // This is for mvc that do not hide li
+	}
+	this.click('ul#filters li:nth-child(1) a');
+});
+
+
 casper.then(function() {
     this.click('ul#todo-list li .view input');
     this.capture('todo6.png');
 });
 
 // Testing compleled when have 1 completed todo
-casper.thenOpen(url+'compleled', function() {
+casper.thenOpen(url + 'compleled', function() {
 	this.capture('todo7.png');
-	
     this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,true, '1 todo when 1 completed todo in the completed tab');
     casper.back();
 });
 
 // Testing compleled when have 1 completed todo
-casper.thenOpen(url+'active', function() {
+casper.thenOpen( url + 'active' , function() {
 	this.capture('todo8.png');
 	
-	if (this.exists('ul#todo-list li')) 
+	if (this.exists('ul#todo-list li')){ 
 		this.test.assertEquals(this.getElementInfo('ul#todo-list li').visible,false, '0 todo when 1 completed todo in the active tab');
-	else
+	} else {
 		this.test.assertDoesntExist('ul#todo-list li','0 todo when 1 active todo in the completed tab');  // This is for mvc that do not hide li
-		
+	}
     casper.back();
 });
 
 // Testing todo count when only 0 todo
-casper.then(function() {
+casper.then(function () {
 	this.capture('todo9.png');
     this.test.assertEquals(this.getElementInfo('#todo-count').text,'0 items left', 'Todo count correct');
 });
@@ -133,9 +125,4 @@ casper.then(function() {
 	this.capture('todo10.png');
 });
 
-
-
-
-casper.clickWhileSelector('.destroy').run(function() {this.test.renderResults(true);});
-//casper.run(function() {this.test.renderResults(true);});
-
+casper.run(function() {this.test.renderResults(true);});
